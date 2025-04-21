@@ -23,6 +23,8 @@ def make_cuda_ext(name, module, sources):
 
 
 def write_version_to_file(version, target_file):
+    os.makedirs(os.path.dirname(target_file), exist_ok=True)
+    
     with open(target_file, 'w') as f:
         print('__version__ = "%s"' % version, file=f)
 
@@ -42,7 +44,7 @@ if __name__ == '__main__':
             'numba',
             'tensorboardX',
             'easydict',
-            'pyyaml'
+            'pyyaml',
             'llvmlite',
             'scikit-image',
             'tqdm',
