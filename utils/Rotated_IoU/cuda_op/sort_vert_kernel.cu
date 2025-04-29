@@ -134,7 +134,7 @@ __global__ void sort_vertices_kernel(int b, int n, int m,
 }
 
 void sort_vertices_wrapper(int b, int n, int m,  const float *vertices, const bool *mask, const int *num_valid, int* idx){
-    cudaStream_t stream = at::cuda::getCurrentCUDAStream();
+    static cudaStream_t stream = at::cuda::getCurrentCUDAStream();
     sort_vertices_kernel<<<b, opt_n_thread(n)>>>(b, n, m, vertices, mask, num_valid, idx);
     CUDA_CHECK_ERRORS();
 }
