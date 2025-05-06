@@ -31,11 +31,20 @@ DATASET:
   NUM: # Total number of frames, just make this blank
 
   DIR:
-    ### Server room 1 ###
+    
+    ### Heejun Server ###
     # The directory order may affect the performance due to sampling order
-    LIST_DIR: ['/mnt/ssd4tb1', '/mnt/ssd4tb2','/mnt/ssd4tb3','/mnt/ssd4tb4']
+    LIST_DIR: ['/mnt/hj_black/kradar']
     DIR_DOPPLER_CB:  # Total 2.2 TB
     DIR_SPARSE_CB: 
+    ### Server room 1 ###
+
+
+    ### Server room 1 ###
+    # The directory order may affect the performance due to sampling order
+    # LIST_DIR: ['/mnt/ssd4tb1', '/mnt/ssd4tb2','/mnt/ssd4tb3','/mnt/ssd4tb4']
+    # DIR_DOPPLER_CB:  # Total 2.2 TB
+    # DIR_SPARSE_CB: 
     ### Server room 1 ###
 
     ### Lab server 1 ###

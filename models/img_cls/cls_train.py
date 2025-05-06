@@ -11,8 +11,9 @@ import torchvision.transforms as transforms
 import torch.optim as optim
 import os.path as osp
 import tqdm
+import time
 
-os.environ['CUDA_VISIBLE_DEVICES']= '0'
+# os.environ['CUDA_VISIBLE_DEVICES']= '0'
 
 """
 # source: https://github.com/open-mmlab/OpenPCDet/blob/1f5b7872b03e9e3d42801872bc59681ef36357b5/pcdet/config.py
@@ -137,11 +138,13 @@ trainset = ImgDataset(path_cfg=path_cfg, split='train', transform=transform)
 testset = ImgDataset(path_cfg=path_cfg, split='test', transform=transform)
 print(trainset.__len__(), testset.__len__())
 
-batch_size = 16
-trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size,
-                                          shuffle=True, num_workers=2)
-testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size,
-                                         shuffle=False, num_workers=2)
+# batch_size = 16
+batch_size = 128
+
+# trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=2)
+# testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=2)
+trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=4)
+testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=4)
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(network.parameters(), lr=0.001, momentum=0.9)
@@ -149,6 +152,7 @@ weather_list = ['normal', 'overcast', 'fog', 'rain', 'sleet', 'light snow', 'hea
 
 best_acc = 0
 for epoch in range(100):
+    start_time = time.time()
     running_loss = 0.0
     network.train()
     for i, data in tqdm.tqdm(enumerate(trainloader, 0)):
@@ -182,11 +186,17 @@ for epoch in range(100):
             correct += (predicted == label).sum().item()
     acc = correct / total
 
+
     if acc > best_acc:
         torch.save(network.state_dict(), 
                    './models/img_cls/best' + str(epoch).zfill(3) + '_' + str(acc*100).split('.')[0] + '.pth')
-        print('epoch, best acc: ' + str(epoch).zfill(3) + '_' + str(acc))
+        print(f'epoch: {epoch+1}, best acc: ' + str(epoch).zfill(3) + '_' + str(acc))
         best_acc = acc
     else:
-        print('epoch, acc: ' + str(epoch).zfill(3) + '_' + str(acc))
+        print(f'epoch: {epoch+1}, acc: ' + str(epoch).zfill(3) + '_' + str(acc))
+        
+    elapsed_time = time.time() - start_time
+    minutes = int(elapsed_time // 60)
+    seconds = int(elapsed_time % 60)
+    print(f"elapsed time: {minutes}:{seconds}")
 
